@@ -1,0 +1,62 @@
+:root {
+    --color-main: rgb(24, 134, 30);
+    --color-secondary: rgb(0, 0, 0);
+    --color-tertiary: rgb(235, 235, 235);
+}
+
+body {
+    background-color: var(--color-tertiary);
+    color: var(--color-secondary);
+    margin: 0px;
+    padding: 0px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto;
+    grid-template-areas: 
+    "header header"
+    "search information"
+    "search five-day"
+    "footer footer";
+}
+
+header {
+    grid-area: header;
+    text-align: center;
+    background-color: var(--color-main);
+    color: var(--color-secondary);
+}
+
+h2, h3, h4, h5, h6 {
+    color: var(--color-main);
+}
+
+button {
+    background-color: var(--color-main);
+    color: var(--color-tertiary);
+}
+
+.search-history-section {
+    grid-area: search;
+}
+
+.location-information {
+    grid-area: information;
+}
+
+.five-day-forecast {
+    grid-area: five-day;
+}
+
+.day-div {
+    display: inline;
+    background-color: var(--color-secondary);
+    height: 50px;
+    width: 100%;
+}
+
+footer {
+    grid-area: footer;
+}
