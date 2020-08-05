@@ -20,7 +20,6 @@ $('document').ready(function () {
     const weatherAPI = {
         call(location) {
             weatherAPI.saveSearch(location);
-            weatherAPI.loadSearches();
             queryURL = `https://api.openweathermap.org/data/2.5/weather?zip=${location},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`;
             $.ajax({
                 url: queryURL,
@@ -30,8 +29,10 @@ $('document').ready(function () {
             });
         },
         displayTodaysWeather(response) {
-            if ($('#containerDiv')) {
-                $('#containerDiv').remove();
+            const recentSearchHistory = $('#containerDiv');
+            if (recentSearchHistory) {
+                recentSearchHistory.remove();
+                console.log(`should have removed search history`);
             }
             cityDateHeader.text(`City: ${response.name}`);
             const container = $('<div>').attr('id', 'containerDiv');
@@ -50,25 +51,26 @@ $('document').ready(function () {
 
         },
         loadSearches() {
-            if ($('#search-history')) {
-                $('#search-history').remove();
-            }
+            // function removeOldSearches() {
+            //     const searchHistory = $('#search-history');
+            //     if (searchHistory) {
+            //         searchHistory.remove();
+            //         removeOldSearches();
+            //     }
+            // }
+            // removeOldSearches();
             for (i = 0; i < recentSearches.length; i++) {
                 const thisSearch = $('<div>').text(recentSearches[i]).attr('id', 'search-history');
-                const searchHistory = $('<div>');
-                searchHistory.append(thisSearch);
-                if (recentSearches.length === (i + 1)) {
-                    return searchHistory;
-                }
+                searchHistorySection.append(thisSearch);
             }
-            searchHistorySection.append(searchHistory);
         },
         saveSearch(newSearch) {
             if (!recentSearches.includes(newSearch)) {
                 recentSearches.push(newSearch);  // add new search to recent searches
                 localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
+                weatherAPI.loadSearches();
             }
-            
+
         }
     }
 
