@@ -14,12 +14,14 @@ body {
 main {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: auto;
+    grid-template-rows: 50px, 100px, 100px, 50px;
     grid-template-areas: 
     "header header"
     "search information"
     "search five-day"
     "footer footer";
+    
+    grid-gap: 5px, 5px;
 }
 
 header {
@@ -40,18 +42,22 @@ button {
 
 .search-history-section {
     grid-area: search;
+    border: 30px, solid, var(--color-main);
 }
 
 .location-information {
     grid-area: information;
+    border: 30px, solid, var(--color-main);
+    color: var(--color-secondary);
 }
 
 .five-day-forecast {
     grid-area: five-day;
+    border: 30px, solid, var(--color-main);
+    grid-template-columns: repeat(5, 1fr);
 }
 
 .day-div {
-    display: inline;
     background-color: var(--color-secondary);
     height: 50px;
     width: 100%;
@@ -59,4 +65,5 @@ button {
 
 footer {
     grid-area: footer;
+    border: 3px, solid, var(--color-main);
 }
