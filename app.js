@@ -1,7 +1,7 @@
 $('document').ready(function () {
     const inputZipCode = $('#zip-search-input');
     const searchButton = $('#search-button');
-    const searchHistorySection = $('#search-history-section');
+    const searchHistoryList = $('#search-history-list');
     const cityDateHeader = $('#city-date-title-header');
     const todaysWeatherStatsDisplay = $('#today-weather-stats-display');
     const fiveDayForecastSection = $('#five-day-forecast');
@@ -76,10 +76,17 @@ $('document').ready(function () {
             }
         },
         loadSearches() {
-            for (i = 0; i < recentSearches.length; i++) {
-                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i]).attr('id', 'search-history');
-                searchHistorySection.append(thisSearch);
+            if ($('#new-search-list')) {
+                $('#new-search-list').remove();
             }
+            newSearchList = $('<ul>').attr('id', 'new-search-list');
+            for (i = 0; i < recentSearches.length; i++) {
+                newSearchListItem = $('<li>');
+                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i]).attr('id', 'search-history');
+                newSearchListItem.append(thisSearch);
+                newSearchList.append(newSearchListItem);
+            }
+            searchHistoryList.append(newSearchList);
         },
         saveSearch(newSearch) {
             if (!recentSearches.includes(newSearch)) {
