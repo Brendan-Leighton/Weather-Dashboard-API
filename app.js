@@ -1,22 +1,24 @@
 $('document').ready(function () {
+
+    // 
+    //  HTML ELEMENTS
+    // 
     const inputZipCode = $('#zip-search-input');
     const searchButton = $('#search-button');
     const searchHistoryList = $('#search-history-list');
     const cityDateHeader = $('#city-date-title-header');
     const todaysWeatherStatsDisplay = $('#today-weather-stats-display');
     const fiveDayForecastSection = $('#five-day-forecast');
-    const fiveDayDivIteration = '#day-div-';  // add ${i} to end of this when iterating the 5 day forecast 
+    // 
+    //  STORAGE
+    // 
     let recentSearches = JSON.parse(localStorage.getItem("recentSearches"));
-
-
-    // api key 93d2bcd8f73ead9c329f7c0c19abca09
-
-    // by latitude and longitude 
-    // api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={your api key}
-
     // by city and state
     // api.openweathermap.org/data/2.5/weather?q={city name},{state code}&appid={your api key}
 
+    // 
+    //  OBJECTS
+    // 
     const weatherAPI = {
         callByZip(zip) {
             queryURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`;
@@ -52,7 +54,7 @@ $('document').ready(function () {
             const weatherIcon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${response.current.weather[0].icon}@2x.png`);
             cityDateHeader.append(weatherIcon);
             const degreeF = String.fromCharCode('8457');
-            const currentTemp = $('<div>').text(`Temperature: ${response.current.temp}${degreeF}`);
+            const currentTemp = $('<div>').text(`Temperature: ${response.current.temp} ${String.fromCharCode('8457')}`);
             const currentHumidity = $('<div>').text(`Humidity: ${response.current.humidity}%`);
             const windSpeed = $('<div>').text(`Wind Speed: ${response.current.wind_speed} MPH`);
             const uvIndex = $('<div>').text(`UV Index: ${response.current.uvi}`);
@@ -66,7 +68,7 @@ $('document').ready(function () {
                 day = response.daily[i];
                 date = $('<div>').text('placeholder');
                 icon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`);
-                temp = $('<div>').text(`Temp: ${day.temp.min}-${day.temp.max}`);
+                temp = $('<div>').text(`Temp: ${day.temp.min} - ${day.temp.max} ${String.fromCharCode('8457')}`);
                 humidity = $('<div>').text(`Humidity: ${day.humidity}%`);
                 dayDiv.append(date, icon, temp, humidity);
                 dayDivCollection.append(dayDiv);
@@ -86,30 +88,36 @@ $('document').ready(function () {
             }
             searchHistoryList.append(newSearchList);
         },
-        saveSearch(newSearch) {
-            if (!recentSearches.includes(newSearch)) {
+        saveSearch(newSearch) {  // cityName, zip
+            // for (i = 0; i < recentSearches.length; i++) {
+            //     if (!recentSearches.key('zipCode').includes(zip)) {
+            //         weatherAPI.savedSearchObj.cityName = cityName;
+            //         weatherAPI.savedSearchObj.zipCode = zip;
+            //         recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
+            //         localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
+            //     }
+            // }
+            // weatherAPI.loadSearches();
+            // if (!recentSearches.includes(zip)) {
+            //     weatherAPI.savedSearchObj.cityName = cityName;
+            //     weatherAPI.savedSearchObj.zipCode = zip;
+            //     recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
+            //     localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
+            // }
                 recentSearches.push(newSearch);  // add new search to recent searches
                 localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
                 weatherAPI.loadSearches();
-            }
-
+        },
+        savedSearchObj: {
+            cityName: "",
+            zipCode: ""
         }
     }
 
-
-    searchButton.on('click', function () {
-        zip = inputZipCode.val();
-        weatherAPI.callByZip(zip);
-    });
-
-    if (Array.isArray(recentSearches)) {  // does an array already exist in local storage?
-        weatherAPI.loadSearches();
-    } else {
-        recentSearches = [];
-    }
+    
 
     const location = {
-        getLatLon() {
+        getCurrentGeoLocationLatLong() {
             navigator.geolocation.getCurrentPosition(this.assignLatLon);
         },
         assignLatLon(position) {
@@ -121,6 +129,26 @@ $('document').ready(function () {
             cityDateHeader.text(`City: Current Location`);
         }
     }
-    location.getLatLon();
+
+    // 
+    //  RUN ON START UP
+    // 
+    
+    if (!Array.isArray(recentSearches)) {  // does an array already exist in local storage?
+        recentSearches = [];
+        // localStorage.setItem('recentSearches', []);
+        console.log('local storage should have been created');
+    } else {
+        weatherAPI.loadSearches();
+    }
+    location.getCurrentGeoLocationLatLong();
+
+    // 
+    //  EVENT LISTENERS
+    // 
+    searchButton.on('click', function () {
+        zip = inputZipCode.val();
+        weatherAPI.callByZip(zip);
+    });
 
 });
