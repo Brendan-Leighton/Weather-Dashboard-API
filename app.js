@@ -18,14 +18,27 @@ $('document').ready(function () {
     // api.openweathermap.org/data/2.5/weather?q={city name},{state code}&appid={your api key}
 
     const weatherAPI = {
-        call(location) {
-            weatherAPI.saveSearch(location);
-            queryURL = `https://api.openweathermap.org/data/2.5/weather?zip=${location},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`;
+        callByZip(zip) {
+            queryURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`;
             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
+                console.log('zip response', response);
+                weatherAPI.saveSearch(response.name);
                 weatherAPI.displayTodaysWeather(response);
+                weatherAPI.callByLatLon(response.coord.lat, response.coord.lon);
+            });
+        },
+        callByLatLon(latitude, longitude) {
+            weatherAPI.saveSearch(`Latitude: ${latitude} \nLongitude: ${longitude}`);
+            queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minute,hourly&appid=fe0750260bcd9b74a10be4cdcee06e63`;
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                // displayFiveDayForecast(response);
             });
         },
         displayTodaysWeather(response) {
@@ -47,7 +60,7 @@ $('document').ready(function () {
             container.append(weatherDescription, currentTemp, currentHumidity, windSpeed, uvIndex);
             todaysWeatherStatsDisplay.append(container);
         },
-        displayFiveDayForecast() {
+        displayFiveDayForecast(response) {
 
         },
         loadSearches() {
@@ -77,7 +90,7 @@ $('document').ready(function () {
 
     searchButton.on('click', function () {
         zip = inputZipCode.val();
-        weatherAPI.call(zip);
+        weatherAPI.callByZip(zip);
     });
 
     if (Array.isArray(recentSearches)) {  // does an array already exist in local storage?
@@ -85,5 +98,18 @@ $('document').ready(function () {
     } else {
         recentSearches = [];
     }
+
+    const location = {
+        getLatLon() {
+            navigator.geolocation.getCurrentPosition(this.assignLatLon);
+        },
+        assignLatLon(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            console.log(`lat: ${latitude} \nlong: ${longitude}`);
+            weatherAPI.callByLatLon(latitude, longitude);
+        }
+    }
+    location.getLatLon();
 
 });
