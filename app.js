@@ -27,7 +27,7 @@ $('document').ready(function () {
                 method: "GET"
             }).then(function (response) {
                 console.log('zip response', response);
-                weatherAPI.saveSearch(`${response.name}, ${zip}`);
+                weatherAPI.saveSearch(response.name, zip);
                 cityDateHeader.text(`City: ${response.name}`);
                 weatherAPI.callByLatLon(response.coord.lat, response.coord.lon);
             });
@@ -88,7 +88,7 @@ $('document').ready(function () {
             }
             searchHistoryList.append(newSearchList);
         },
-        saveSearch(newSearch) {  // cityName, zip
+        saveSearch(cityName, zip) {  // cityName, zip
             // for (i = 0; i < recentSearches.length; i++) {
             //     if (!recentSearches.key('zipCode').includes(zip)) {
             //         weatherAPI.savedSearchObj.cityName = cityName;
@@ -99,14 +99,15 @@ $('document').ready(function () {
             // }
             // weatherAPI.loadSearches();
             // if (!recentSearches.includes(zip)) {
-            //     weatherAPI.savedSearchObj.cityName = cityName;
-            //     weatherAPI.savedSearchObj.zipCode = zip;
-            //     recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
-            //     localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
-            // }
-                recentSearches.push(newSearch);  // add new search to recent searches
+                weatherAPI.savedSearchObj.cityName = cityName;
+                weatherAPI.savedSearchObj.zipCode = zip;
+                recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
                 localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
-                weatherAPI.loadSearches();
+            // }
+
+                // recentSearches.push(newSearch);  // add new search to recent searches
+                // localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
+                // weatherAPI.loadSearches();
         },
         savedSearchObj: {
             cityName: "",
