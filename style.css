@@ -47,31 +47,59 @@ button {
 
 .location-information {
     grid-area: information;
-    border: 30px, solid, var(--color-main);
     color: var(--color-secondary);
 }
-
+/* 
+    5 DAY FORECAST
+*/
 .five-day-forecast {
     grid-area: five-day;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 50px, 100%;
+    grid-template-rows: 50px 100px;
     grid-template-areas:
-    "five-day-header . . . ."
-    "day0 day1 day2 day3 day4";
-    border: 30px, solid, var(--color-main);
+    "five-day-header"
+    "day-divs";
 }
-
 .five-day-header {
     grid-area: five-day-header;
 }
-
-
-.day-div {
-    color: var(--color-main);
-    height: 50px;
-    width: 100%;
+.day-div-grid {
+    display: grid;
+    grid-area: day-divs;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas: 
+    "day-div-0 day-div-1 day-div-2 day-div-3 day-div-4";
+    column-gap: 5px;
 }
+#day-div-0 {
+    grid-area: day-div-0;
+}
+#day-div-1 {
+    grid-area: day-div-1;
+}
+#day-div-2 {
+    grid-area: day-div-2;
+}
+#day-div-3 {
+    grid-area: day-div-3;
+}
+#day-div-4 {
+    grid-area: day-div-4;
+}
+.day-divs {
+    color: var(--color-main);
+    height: auto;
+    width: 100%;
+    border: 2px solid var(--color-main);
+    border-radius: 25px;
+    padding: 10px;
+}
+
+
+
+
 
 footer {
     grid-area: footer;

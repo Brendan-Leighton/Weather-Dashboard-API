@@ -60,20 +60,18 @@ $('document').ready(function () {
             todaysWeatherStatsDisplay.append(container);
         },
         displayFiveDayForecast(response) {
-            
+            dayDivCollection = $('<div>').addClass('day-div-grid');
             for (i = 0; i < 5; i++) {
-                dayDiv = $(`#day-div-${i}`);
-                date = $('<div>');
-                icon = $('<img>');
-                temp = $('<div>');
-                humidity = $('<div>');
+                dayDiv = $(`<div>`).addClass('day-divs').attr('id', `day-div-${i}`);
                 day = response.daily[i];
-                date.text('placeholder');
-                icon.attr('src', `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`);
-                temp.text(`Temp: ${day.temp.min}-${day.temp.max}`);
-                humidity.text(`Humidity: ${day.humidity}%`);
-                $(dayDiv).append(date, icon, temp, humidity);
+                date = $('<div>').text('placeholder');
+                icon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`);
+                temp = $('<div>').text(`Temp: ${day.temp.min}-${day.temp.max}`);
+                humidity = $('<div>').text(`Humidity: ${day.humidity}%`);
+                dayDiv.append(date, icon, temp, humidity);
+                dayDivCollection.append(dayDiv);
             }
+            fiveDayForecastSection.append(dayDivCollection);
         },
         loadSearches() {
             if ($('#new-search-list')) {
