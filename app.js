@@ -25,55 +25,59 @@ $('document').ready(function () {
                 method: "GET"
             }).then(function (response) {
                 console.log('zip response', response);
-                weatherAPI.saveSearch(response.name);
-                weatherAPI.displayTodaysWeather(response);
+                weatherAPI.saveSearch(`${response.name}, ${zip}`);
+                cityDateHeader.text(`City: ${response.name}`);
                 weatherAPI.callByLatLon(response.coord.lat, response.coord.lon);
             });
         },
         callByLatLon(latitude, longitude) {
-            weatherAPI.saveSearch(`Latitude: ${latitude} \nLongitude: ${longitude}`);
-            queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minute,hourly&appid=fe0750260bcd9b74a10be4cdcee06e63`;
+            queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=imperial&exclude=minutely,hourly&appid=fe0750260bcd9b74a10be4cdcee06e63`;
             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
                 console.log(response);
-                // displayFiveDayForecast(response);
+                weatherAPI.displayFiveDayForecast(response);
+                weatherAPI.displayTodaysWeather(response);
             });
         },
         displayTodaysWeather(response) {
-            const recentSearchHistory = $('#containerDiv');
-            if (recentSearchHistory) {
-                recentSearchHistory.remove();
-                console.log(`should have removed search history`);
+            const recentSearchData = $('#containerDiv');
+            if (recentSearchData) {
+                recentSearchData.remove();
+                console.log(`should have removed recent search data`);
             }
-            cityDateHeader.text(`City: ${response.name}`);
             const container = $('<div>').attr('id', 'containerDiv');
-            const weatherDescription = $('<div>').text(`Type: ${response.weather[0].main}, ${response.weather[0].description}`);
-            const weatherIcon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`);
+            const weatherDescription = $('<div>').text(`Type: ${response.current.weather[0].description.toUpperCase()}`);
+            const weatherIcon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${response.current.weather[0].icon}@2x.png`);
             cityDateHeader.append(weatherIcon);
             const degreeF = String.fromCharCode('8457');
-            const currentTemp = $('<div>').text(`Temperature: ${response.main.temp}${degreeF}`);
-            const currentHumidity = $('<div>').text(`Humidity: ${response.main.humidity}%`);
-            const windSpeed = $('<div>').text(`Wind Speed: ${response.wind.speed} MPH`);
-            const uvIndex = $('<div>').text(`UV Index: to be determined`);
+            const currentTemp = $('<div>').text(`Temperature: ${response.current.temp}${degreeF}`);
+            const currentHumidity = $('<div>').text(`Humidity: ${response.current.humidity}%`);
+            const windSpeed = $('<div>').text(`Wind Speed: ${response.current.wind_speed} MPH`);
+            const uvIndex = $('<div>').text(`UV Index: ${response.current.uvi}`);
             container.append(weatherDescription, currentTemp, currentHumidity, windSpeed, uvIndex);
             todaysWeatherStatsDisplay.append(container);
         },
         displayFiveDayForecast(response) {
-
+            
+            for (i = 0; i < 5; i++) {
+                dayDiv = $(`#day-div-${i}`);
+                date = $('<div>');
+                icon = $('<img>');
+                temp = $('<div>');
+                humidity = $('<div>');
+                day = response.daily[i];
+                date.text('placeholder');
+                icon.attr('src', `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`);
+                temp.text(`Temp: ${day.temp.min}-${day.temp.max}`);
+                humidity.text(`Humidity: ${day.humidity}%`);
+                $(dayDiv).append(date, icon, temp, humidity);
+            }
         },
         loadSearches() {
-            // function removeOldSearches() {
-            //     const searchHistory = $('#search-history');
-            //     if (searchHistory) {
-            //         searchHistory.remove();
-            //         removeOldSearches();
-            //     }
-            // }
-            // removeOldSearches();
             for (i = 0; i < recentSearches.length; i++) {
-                const thisSearch = $('<div>').text(recentSearches[i]).attr('id', 'search-history');
+                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i]).attr('id', 'search-history');
                 searchHistorySection.append(thisSearch);
             }
         },
@@ -108,6 +112,8 @@ $('document').ready(function () {
             const longitude = position.coords.longitude;
             console.log(`lat: ${latitude} \nlong: ${longitude}`);
             weatherAPI.callByLatLon(latitude, longitude);
+            
+            cityDateHeader.text(`City: Current Location`);
         }
     }
     location.getLatLon();

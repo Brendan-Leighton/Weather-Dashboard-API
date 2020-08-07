@@ -53,12 +53,22 @@ button {
 
 .five-day-forecast {
     grid-area: five-day;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px, 100%;
+    grid-template-areas:
+    "five-day-header . . . ."
+    "day0 day1 day2 day3 day4";
     border: 30px, solid, var(--color-main);
-    grid-template-columns: repeat(5, 1fr);
 }
 
+.five-day-header {
+    grid-area: five-day-header;
+}
+
+
 .day-div {
-    background-color: var(--color-secondary);
+    color: var(--color-main);
     height: 50px;
     width: 100%;
 }
