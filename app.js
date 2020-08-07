@@ -53,7 +53,6 @@ $('document').ready(function () {
             const weatherDescription = $('<div>').text(`Type: ${response.current.weather[0].description.toUpperCase()}`);
             const weatherIcon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${response.current.weather[0].icon}@2x.png`);
             cityDateHeader.append(weatherIcon);
-            const degreeF = String.fromCharCode('8457');
             const currentTemp = $('<div>').text(`Temperature: ${response.current.temp} ${String.fromCharCode('8457')}`);
             const currentHumidity = $('<div>').text(`Humidity: ${response.current.humidity}%`);
             const windSpeed = $('<div>').text(`Wind Speed: ${response.current.wind_speed} MPH`);
@@ -82,32 +81,30 @@ $('document').ready(function () {
             newSearchList = $('<ul>').attr('id', 'new-search-list');
             for (i = 0; i < recentSearches.length; i++) {
                 newSearchListItem = $('<li>');
-                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i]).attr('id', 'search-history');
+                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i].cityName).attr('id', 'search-history');
                 newSearchListItem.append(thisSearch);
                 newSearchList.append(newSearchListItem);
             }
             searchHistoryList.append(newSearchList);
         },
         saveSearch(cityName, zip) {  // cityName, zip
-            // for (i = 0; i < recentSearches.length; i++) {
-            //     if (!recentSearches.key('zipCode').includes(zip)) {
-            //         weatherAPI.savedSearchObj.cityName = cityName;
-            //         weatherAPI.savedSearchObj.zipCode = zip;
-            //         recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
-            //         localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
-            //     }
-            // }
-            // weatherAPI.loadSearches();
-            // if (!recentSearches.includes(zip)) {
-                weatherAPI.savedSearchObj.cityName = cityName;
-                weatherAPI.savedSearchObj.zipCode = zip;
+            console.log(recentSearches)
+            console.log(recentSearches.length)
+            var isCopy = false;
+            weatherAPI.savedSearchObj.cityName = cityName;
+            weatherAPI.savedSearchObj.zipCode = zip;
+            //check if there are duplicates by a loop then if there is a 
+            for (var i = 0; i < recentSearches.length && !isCopy; i++) {
+                console.log(recentSearches[i].zipCode == zip)
+                if (recentSearches[i].zipCode == zip) {
+                    isCopy = true;
+                }
+
+            }
+            if (!isCopy) {
                 recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
                 localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
-            // }
-
-                // recentSearches.push(newSearch);  // add new search to recent searches
-                // localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
-                // weatherAPI.loadSearches();
+            }
         },
         savedSearchObj: {
             cityName: "",
@@ -115,7 +112,7 @@ $('document').ready(function () {
         }
     }
 
-    
+
 
     const location = {
         getCurrentGeoLocationLatLong() {
@@ -126,7 +123,7 @@ $('document').ready(function () {
             const longitude = position.coords.longitude;
             console.log(`lat: ${latitude} \nlong: ${longitude}`);
             weatherAPI.callByLatLon(latitude, longitude);
-            
+
             cityDateHeader.text(`City: Current Location`);
         }
     }
@@ -134,10 +131,10 @@ $('document').ready(function () {
     // 
     //  RUN ON START UP
     // 
-    
+
     if (!Array.isArray(recentSearches)) {  // does an array already exist in local storage?
         recentSearches = [];
-        // localStorage.setItem('recentSearches', []);
+        // localStorage.setItem("recentSearches", []);
         console.log('local storage should have been created');
     } else {
         weatherAPI.loadSearches();
