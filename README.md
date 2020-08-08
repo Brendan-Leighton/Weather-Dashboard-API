@@ -20,7 +20,8 @@
 <!-- ABOUT THE PROJECT -->
 # About The Project
 
-## Assignment: Server-Side APIs: Weather Dashboard
+## Assignment
+Server-Side APIs: Weather Dashboard
 Build a weather dashboard that will run in the browser and feature dynamically updated HTML and CSS.
 
 
