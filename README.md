@@ -37,7 +37,7 @@ Project Link: [https://br3ndan-l8n.github.io/Weather-Dashboard-API/](https://br3
 
 ## Project Screenshot
 
-![Screenshot](Assets/screenshot)
+![Screenshot](Assets/screencapture.png)
 
 
 
