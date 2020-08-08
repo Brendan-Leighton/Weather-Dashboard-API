@@ -9,7 +9,7 @@
 <!-- TABLE OF CONTENTS -->
 # Table of Contents
 * [About the Project](#about-the-project)
-    * [Assignment](#assignment)
+    * [Assignment](## assignment:-server-side-apis:-Weather-dashboard)
     * [Finished Project Link](#finished-project)
     * [Project Screenshot](#project-screenshot)
 * [Contact](#contact)
