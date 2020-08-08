@@ -80,7 +80,7 @@ $('document').ready(function () {
             newSearchList = $('<div>').attr('id', 'new-search-list');
             for (i = 0; i < recentSearches.length; i++) {
                 newSearchListItem = $('<div>');
-                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i].cityName).attr('id', 'search-history-button');
+                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i].cityName).attr('id', 'search-history-button').attr('data-name', recentSearches[i].zipCode);
                 newSearchListItem.append(thisSearch);
                 newSearchList.append(newSearchListItem);
             }
@@ -107,6 +107,10 @@ $('document').ready(function () {
         savedSearchObj: {
             cityName: "",
             zipCode: ""
+        },
+        searchFromHistory() {
+            thisZip = $(this).attr('data-name');
+            weatherAPI.callByZip(thisZip);
         }
     }
 
@@ -146,6 +150,6 @@ $('document').ready(function () {
         zip = inputZipCode.val();
         weatherAPI.callByZip(zip);
     });
-    // $(document).on('click', '#search-history-button', )
+    $(document).on('click', '#search-history-button', weatherAPI.searchFromHistory);
 
 });
