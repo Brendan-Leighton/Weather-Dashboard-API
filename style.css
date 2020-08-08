@@ -1,8 +1,12 @@
 :root {
-    --color-main: rgb(24, 134, 30);
-    --color-secondary: rgb(0, 0, 0);
-    --color-tertiary: rgb(235, 235, 235);
+    --color-main: rgb(0, 185, 9);
+    --color-secondary: rgb(255, 255, 255);
+    --color-tertiary: rgb(72, 39, 83);
 }
+
+* { 
+    box-sizing: border-box; /*This makes the Padding and Border be included in the total Height and Width of an element.*/
+  }
 
 body {
     background-color: var(--color-tertiary);
@@ -11,40 +15,51 @@ body {
     padding: 0px;
 }
 
-main {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: 50px, 100px, 100px, 50px;
-    grid-template-areas: 
-    "header header"
-    "search information"
-    "search five-day"
-    "footer footer";
-    
-    grid-gap: 5px, 5px;
-}
+
 
 header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     grid-area: header;
     text-align: center;
+    height: 100px;
+    margin-bottom: 75px;
     background-color: var(--color-main);
     color: var(--color-secondary);
+    
 }
 
 h2, h3, h4, h5, h6 {
     color: var(--color-main);
+    margin: 20px 0px;
 }
 
 button {
     background-color: var(--color-main);
     color: var(--color-tertiary);
+    border-radius: 5px;
+    width: 100%;
+}
+#search-button {
+    width: 266px;
+}
+
+#search-history-list {
+    padding: 15px;
 }
 
 .search-history-section {
+    text-align: center;
     grid-area: search;
     border: 30px, solid, var(--color-main);
+    grid-template-areas: 
+    'zip-search-input' 'search-button'
+    'search-history-list .';
 }
-
+.weather-data {
+    padding: 15px;
+}
 .location-information {
     grid-area: information;
     color: var(--color-secondary);
@@ -56,7 +71,7 @@ button {
     grid-area: five-day;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 50px 100px;
+    grid-template-rows: auto;
     grid-template-areas:
     "five-day-header"
     "day-divs";
@@ -67,11 +82,26 @@ button {
 .day-div-grid {
     display: grid;
     grid-area: day-divs;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 1fr;
     grid-template-rows: auto;
     grid-template-areas: 
-    "day-div-0 day-div-1 day-div-2 day-div-3 day-div-4";
+    "day-div-0" 
+    "day-div-1" 
+    "day-div-2" 
+    "day-div-3" 
+    "day-div-4";
     column-gap: 5px;
+}
+@media (min-width: 645px) {
+    .day-div-grid {
+        display: grid;
+        grid-area: day-divs;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: auto;
+        grid-template-areas: 
+        "day-div-0 day-div-1 day-div-2 day-div-3 day-div-4";
+        column-gap: 5px;
+    }
 }
 #day-div-0 {
     grid-area: day-div-0;
@@ -89,7 +119,7 @@ button {
     grid-area: day-div-4;
 }
 .day-divs {
-    color: var(--color-main);
+    color: var(--color-secondary);
     height: auto;
     width: 100%;
     border: 2px solid var(--color-main);
@@ -105,3 +135,57 @@ footer {
     grid-area: footer;
     border: 3px, solid, var(--color-main);
 }
+
+
+
+
+/* .grid-header { grid-area: header; }
+.grid-left { grid-area: left; }
+.grid-body { grid-area: main; }
+.grid-right { grid-area: right; }
+.grid-footer { grid-area: footer; } */
+
+.grid-container {
+display: grid;
+grid-template-areas:
+    'header'
+    'search'
+    'information'
+    'five-day'
+    'footer';
+grid-gap: 10px;
+padding: 10px;
+}
+
+
+/*
+    Desktop Grid - Start
+*/
+@media (min-width: 850px) {
+
+    /* .grid-header { grid-area: header; }
+    .grid-left { grid-area: left; }
+    .grid-main { grid-area: main; }
+    .grid-right { grid-area: right; }
+    .grid-footer { grid-area: footer; } */
+
+    
+    main {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: 50px, 100px, 100px, 50px;
+        grid-template-areas: 
+        "header header"
+        "search information"
+        "search five-day"
+        "footer footer";
+        
+        
+    }
+    
+
+
+}
+/*
+    Desktop Grid - End
+*/

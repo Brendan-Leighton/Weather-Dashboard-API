@@ -21,9 +21,8 @@ $('document').ready(function () {
     // 
     const weatherAPI = {
         callByZip(zip) {
-            queryURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`;
             $.ajax({
-                url: queryURL,
+                url: `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`,
                 method: "GET"
             }).then(function (response) {
                 console.log('zip response', response);
@@ -33,9 +32,8 @@ $('document').ready(function () {
             });
         },
         callByLatLon(latitude, longitude) {
-            queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=imperial&exclude=minutely,hourly&appid=fe0750260bcd9b74a10be4cdcee06e63`;
             $.ajax({
-                url: queryURL,
+                url: `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=imperial&exclude=minutely,hourly&appid=fe0750260bcd9b74a10be4cdcee06e63`,
                 method: "GET"
             }).then(function (response) {
                 console.log(response);
@@ -44,10 +42,8 @@ $('document').ready(function () {
             });
         },
         displayTodaysWeather(response) {
-            const recentSearchData = $('#containerDiv');
-            if (recentSearchData) {
-                recentSearchData.remove();
-                console.log(`should have removed recent search data`);
+            if ($('#containerDiv')) {
+                $('#containerDiv').remove();
             }
             const container = $('<div>').attr('id', 'containerDiv');
             const weatherDescription = $('<div>').text(`Type: ${response.current.weather[0].description.toUpperCase()}`);
@@ -61,6 +57,9 @@ $('document').ready(function () {
             todaysWeatherStatsDisplay.append(container);
         },
         displayFiveDayForecast(response) {
+            if ($('.day-div-grid')) {
+                $('.day-div-grid').remove();
+            }
             dayDivCollection = $('<div>').addClass('day-div-grid');
             for (i = 0; i < 5; i++) {
                 dayDiv = $(`<div>`).addClass('day-divs').attr('id', `day-div-${i}`);
@@ -78,33 +77,32 @@ $('document').ready(function () {
             if ($('#new-search-list')) {
                 $('#new-search-list').remove();
             }
-            newSearchList = $('<ul>').attr('id', 'new-search-list');
+            newSearchList = $('<div>').attr('id', 'new-search-list');
             for (i = 0; i < recentSearches.length; i++) {
-                newSearchListItem = $('<li>');
-                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i].cityName).attr('id', 'search-history');
+                newSearchListItem = $('<div>');
+                const thisSearch = $('<button>').addClass('button').attr('type', 'button').text(recentSearches[i].cityName).attr('id', 'search-history-button');
                 newSearchListItem.append(thisSearch);
                 newSearchList.append(newSearchListItem);
             }
             searchHistoryList.append(newSearchList);
         },
         saveSearch(cityName, zip) {  // cityName, zip
-            console.log(recentSearches)
-            console.log(recentSearches.length)
             var isCopy = false;
             weatherAPI.savedSearchObj.cityName = cityName;
             weatherAPI.savedSearchObj.zipCode = zip;
-            //check if there are duplicates by a loop then if there is a 
+            //  loop through the saved recentSearches to determine if this city already exists,
             for (var i = 0; i < recentSearches.length && !isCopy; i++) {
-                console.log(recentSearches[i].zipCode == zip)
                 if (recentSearches[i].zipCode == zip) {
-                    isCopy = true;
+                    return isCopy = true;  //  if so we return isCopy as true to,
                 }
 
             }
-            if (!isCopy) {
+            if (!isCopy) {  //  bypass this statement so the new city doesn't get added, else we,
                 recentSearches.push(weatherAPI.savedSearchObj);  // add new search to recent searches
                 localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
+                weatherAPI.loadSearches();
             }
+            
         },
         savedSearchObj: {
             cityName: "",
@@ -148,5 +146,6 @@ $('document').ready(function () {
         zip = inputZipCode.val();
         weatherAPI.callByZip(zip);
     });
+    // $(document).on('click', '#search-history-button', )
 
 });
