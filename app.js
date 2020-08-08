@@ -64,7 +64,7 @@ $('document').ready(function () {
             for (i = 0; i < 5; i++) {
                 dayDiv = $(`<div>`).addClass('day-divs').attr('id', `day-div-${i}`);
                 day = response.daily[i];
-                date = $('<div>').text('placeholder');
+                date = $('<div>').text(moment().add(i, 'days').format('ddd M/D'));
                 icon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`);
                 temp = $('<div>').text(`Temp: ${day.temp.min} - ${day.temp.max} ${String.fromCharCode('8457')}`);
                 humidity = $('<div>').text(`Humidity: ${day.humidity}%`);
@@ -151,5 +151,7 @@ $('document').ready(function () {
         weatherAPI.callByZip(zip);
     });
     $(document).on('click', '#search-history-button', weatherAPI.searchFromHistory);
+
+    console.log(moment());
 
 });
