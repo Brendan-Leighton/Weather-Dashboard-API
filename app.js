@@ -1,5 +1,4 @@
 $('document').ready(function () {
-
     // 
     //  HTML ELEMENTS
     // 
@@ -13,9 +12,6 @@ $('document').ready(function () {
     //  STORAGE
     // 
     let recentSearches = JSON.parse(localStorage.getItem("recentSearches"));
-    // by city and state
-    // api.openweathermap.org/data/2.5/weather?q={city name},{state code}&appid={your api key}
-
     // 
     //  OBJECTS
     // 
@@ -25,7 +21,6 @@ $('document').ready(function () {
                 url: `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&units=imperial&appid=fe0750260bcd9b74a10be4cdcee06e63`,
                 method: "GET"
             }).then(function (response) {
-                console.log('zip response', response);
                 weatherAPI.saveSearch(response.name, zip);
                 cityDateHeader.text(`City: ${response.name}`);
                 weatherAPI.callByLatLon(response.coord.lat, response.coord.lon);
@@ -36,7 +31,6 @@ $('document').ready(function () {
                 url: `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=imperial&exclude=minutely,hourly&appid=fe0750260bcd9b74a10be4cdcee06e63`,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
                 weatherAPI.displayFiveDayForecast(response);
                 weatherAPI.displayTodaysWeather(response);
             });
@@ -102,7 +96,6 @@ $('document').ready(function () {
                 localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
                 weatherAPI.loadSearches();
             }
-            
         },
         savedSearchObj: {
             cityName: "",
@@ -113,9 +106,7 @@ $('document').ready(function () {
             weatherAPI.callByZip(thisZip);
         }
     }
-
-
-
+    // OBJECT FOR USERS GEO-LOCATION
     const location = {
         getCurrentGeoLocationLatLong() {
             navigator.geolocation.getCurrentPosition(this.assignLatLon);
@@ -123,26 +114,19 @@ $('document').ready(function () {
         assignLatLon(position) {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
-            console.log(`lat: ${latitude} \nlong: ${longitude}`);
             weatherAPI.callByLatLon(latitude, longitude);
-
             cityDateHeader.text(`City: Current Location`);
         }
     }
-
     // 
     //  RUN ON START UP
     // 
-
     if (!Array.isArray(recentSearches)) {  // does an array already exist in local storage?
         recentSearches = [];
-        // localStorage.setItem("recentSearches", []);
-        console.log('local storage should have been created');
     } else {
         weatherAPI.loadSearches();
     }
     location.getCurrentGeoLocationLatLong();
-
     // 
     //  EVENT LISTENERS
     // 
@@ -151,7 +135,4 @@ $('document').ready(function () {
         weatherAPI.callByZip(zip);
     });
     $(document).on('click', '#search-history-button', weatherAPI.searchFromHistory);
-
-    console.log(moment());
-
 });
